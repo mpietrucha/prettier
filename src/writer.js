@@ -1,65 +1,35 @@
 import Config from '@/config'
-import { Cache } from 'file-system-cache'
+import Cache from '@writer/cache'
+import Ignore from '@writer/ignore'
 import { existsSync } from 'fs'
 import { readFile, writeFile } from 'fs/promises'
 import { glob } from 'glob'
 import { hash } from 'hasha'
+import isValidPath from 'is-valid-path'
 import noop from 'lodash.noop'
-import { minimatch } from 'minimatch'
-import { dirname, join, resolve } from 'path'
 import { format } from 'prettier'
 
 export default class Writer {
-    constructor(options = {}) {
-        const {
-            cwd = process.cwd(),
-            ignore = ['**/.git/**', '**/node_modules/**'],
-            cache = ((cache = '.cache') => {
-                const local = dirname(import.meta.dirname)
-
-                return resolve(local, cache)
-            })(),
-        } = options
-
-        if (!cwd) {
-            throw new Error('Writer `options.cwd` must be present.')
-        }
-
-        this.cwd = `${cwd}`
+    constructor({ cache, ignore, cwd } = {}) {
+        this.options = { cwd }
 
         this.config = new Config()
 
-        this.ignore = new Set([ignore].flat().filter(String))
+        this.ignore = new Ignore(ignore)
 
-        if (!cache) {
-            return
-        }
-
-        this.cache = new Cache({
-            basePath: cache,
+        this.cache = new Cache(cache, () => {
+            this.throwInvalidCacheDirectoryError()
         })
 
-        this.ignore.add(join(cache, '/**'))
+        this.ignore.add(Ignore.directory(this.cache.directory()))
     }
 
-    ignored(without) {
-        const ignored = [...this.ignore.values()]
-
-        if (!Array.isArray(without)) {
-            return ignored
-        }
-
-        return ignored.filter(ignore => !without.includes(ignore))
-    }
-
-    ignoring(file, without) {
-        return this.ignored(without).find(ignore => minimatch(file, ignore))
+    ignored() {
+        return this.ignore.get()
     }
 
     async hash(content) {
-        return await hash(content, {
-            algorithm: 'md5',
-        })
+        return await hash(content, { algorithm: 'md5' })
     }
 
     async read(file) {
@@ -67,13 +37,13 @@ export default class Writer {
             return
         }
 
-        if (this.ignoring(file)) {
+        if (this.ignore.find(file)) {
             return
         }
 
         const content = await readFile(file, 'utf8')
 
-        const cache = await this.cache?.get(file)
+        const cache = await this.cache.get(file)
 
         const hash = cache && (await this.hash(content))
 
@@ -87,7 +57,7 @@ export default class Writer {
     async save(file, content) {
         await writeFile(file, content)
 
-        await this.cache?.set(file, await this.hash(content))
+        await this.cache.set(file, await this.hash(content))
 
         return file
     }
@@ -102,9 +72,11 @@ export default class Writer {
             ignore: this.ignored(),
         })
 
-        await Promise.all(files.map(write))
+        const pending = files.map(write)
 
-        return files
+        return await Promise.all(pending).then(done => {
+            return files.filter((file, i) => done.at(i))
+        })
     }
 
     async write(file, config = {}) {
@@ -124,5 +96,27 @@ export default class Writer {
         content && (await this.save(file, content))
 
         return !!content
+    }
+
+    get cwd() {
+        const { cwd = process.cwd() } = this.options
+
+        if (isValidPath(cwd)) {
+            return cwd
+        }
+
+        this.throwInvalidCwdError(cwd)
+    }
+
+    throwInvalidCwdError(cwd, message) {
+        message ||= 'Writer `options.cwd` must be valid path.'
+
+        throw new Error(message)
+    }
+
+    throwInvalidCacheDirectoryError(directory, message) {
+        message ||= 'Writer `options.cache` must be valid path or configuration object.'
+
+        throw new Error(message)
     }
 }

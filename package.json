@@ -1,6 +1,6 @@
 {
     "name": "@mpietrucha/prettier",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "license": "MIT",
     "author": {
         "name": "Michał Pietrucha",
@@ -31,8 +31,10 @@
         "file-system-cache": "^2.4.7",
         "glob": "^11.0.0",
         "hasha": "^6.0.0",
+        "is-valid-path": "^0.1.1",
         "lodash.isobject": "^3.0.2",
         "lodash.noop": "^3.0.1",
+        "lodash.trim": "^4.5.1",
         "minimatch": "^10.0.1",
         "prettier": "^3.3.3",
         "prettier-plugin-organize-imports": "^4.1.0",

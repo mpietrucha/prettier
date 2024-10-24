@@ -6,7 +6,7 @@ export default defineBuildConfig({
     alias: {
         '~': __dirname,
         '@': resolve(__dirname, 'src'),
-        '@lol': __dirname,
+        '@writer': resolve(__dirname, 'src/writer'),
     },
     rollup: {
         inlineDependencies: true,
