@@ -1,3 +1,4 @@
+import isString from 'lodash.isstring'
 import trim from 'lodash.trim'
 import { minimatch } from 'minimatch'
 import { join } from 'path'
@@ -20,7 +21,7 @@ export default class Ignore {
     add(...paths) {
         const add = ignore => this.adapter().add(ignore)
 
-        return paths.flat(Infinity).filter(String).forEach(add)
+        return paths.flat(Infinity).filter(isString).forEach(add)
     }
 
     find(path) {
@@ -40,6 +41,10 @@ export default class Ignore {
     }
 
     static directory(directory, indicator = '**') {
+        if (!directory) {
+            return
+        }
+
         return join(indicator, trim(directory, indicator), indicator)
     }
 }

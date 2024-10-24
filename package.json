@@ -1,6 +1,6 @@
 {
     "name": "@mpietrucha/prettier",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "license": "MIT",
     "author": {
         "name": "Michał Pietrucha",
@@ -33,6 +33,7 @@
         "hasha": "^6.0.0",
         "is-valid-path": "^0.1.1",
         "lodash.isobject": "^3.0.2",
+        "lodash.isstring": "^4.0.1",
         "lodash.noop": "^3.0.1",
         "lodash.trim": "^4.5.1",
         "minimatch": "^10.0.1",

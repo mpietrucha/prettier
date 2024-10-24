@@ -15,11 +15,11 @@ export default class Cache {
     }
 
     set(key, value) {
-        return this.adapter()?.set(key, value)
+        return this.adapter().set(key, value)
     }
 
     get(key) {
-        return this.adapter()?.get(key)
+        return this.adapter().get(key)
     }
 
     directory() {
@@ -38,6 +38,8 @@ export default class Cache {
         const { directory = this.default(), ...options } = cache
 
         if (directory === false) {
+            this.cache = new Map()
+
             return
         }
 
