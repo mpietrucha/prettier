@@ -1,7 +1,7 @@
 {
     "name": "@mpietrucha/prettier",
     "version": "1.0.4",
-    "repository": "mpietrucha/prettier-js",
+    "repository": "mpietrucha/prettier",
     "license": "MIT",
     "author": {
         "name": "Michał Pietrucha",
