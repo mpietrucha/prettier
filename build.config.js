@@ -20,17 +20,13 @@ export const rollup = {
 
 const hooks = {
     'copy:done': async context => {
-        const { name: path, plugins, extension = 'js' } = context.options.yaml
+        const { name: path, extension = 'js' } = context.options.yaml
 
         const { input } = context.options.entries.pop()
 
         const { default: content } = await import(`${input}.${extension}`)
 
         const output = join(context.options.outDir, path)
-
-        if (!plugins) {
-            content.plugins = undefined
-        }
 
         await writeFile(output, stringify(content))
 

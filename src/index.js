@@ -9,5 +9,15 @@ export default {
         'prettier-plugin-tailwindcss',
         'prettier-plugin-organize-imports',
         'prettier-plugin-packagejson',
+        '@shufo/prettier-plugin-blade',
+    ],
+    overrides: [
+        {
+            files: ['*.blade.php'],
+            options: {
+                parser: 'blade',
+                tabWidth: 4,
+            },
+        },
     ],
 }
