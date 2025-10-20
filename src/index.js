@@ -16,7 +16,6 @@ export default {
             files: ['*.blade.php'],
             options: {
                 parser: 'blade',
-                tabWidth: 4,
             },
         },
     ],
