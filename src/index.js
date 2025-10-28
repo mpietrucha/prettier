@@ -18,5 +18,11 @@ export default {
                 parser: 'blade',
             },
         },
+        {
+            files: ['*.css', '*.vue'],
+            options: {
+                singleQuote: false,
+            },
+        },
     ],
 }
