@@ -19,7 +19,7 @@ export default {
             },
         },
         {
-            files: ['*.css', '*.vue'],
+            files: ['*.css'],
             options: {
                 singleQuote: false,
             },
