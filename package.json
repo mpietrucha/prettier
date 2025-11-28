@@ -21,7 +21,7 @@
     ],
     "scripts": {
         "build": "unbuild",
-        "format": "prettier . --write --ignore-unknown --config src/index.js",
+        "lint": "prettier . --write --ignore-unknown --config src/index.js",
         "watch": "unbuild --watch"
     },
     "dependencies": {
