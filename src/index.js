@@ -1,7 +1,7 @@
 export default {
     tabWidth: 4,
     semi: false,
-    printWidth: 80,
+    printWidth: 100,
     singleQuote: true,
     arrowParens: 'avoid',
     vueIndentScriptAndStyle: true,
