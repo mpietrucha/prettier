@@ -5,6 +5,10 @@ on:
         tags:
             - 'v*'
 
+permissions:
+    id-token: write
+    contents: read
+
 jobs:
     publish-npm:
         runs-on: ubuntu-latest
@@ -18,5 +22,3 @@ jobs:
             - run: npm run build
             - run: find dist -maxdepth 1 -type f ! -name '*.*js' -delete
             - run: npm publish
-              env:
-                  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
